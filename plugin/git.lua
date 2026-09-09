@@ -1,7 +1,9 @@
 local M = {}
 
 function M.setup()
-	print("idk")
+	vim.api.nvim_create_user_command("idk", function()
+		print("idk")
+	end, {})
 end
 
 return M
