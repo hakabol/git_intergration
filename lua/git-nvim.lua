@@ -92,6 +92,7 @@ function M.expand(buf)
 		["|"] = true,
 		["/"] = true,
 		["\\"] = true,
+		["_"] = true,
 		["*"] = false,
 	}
 
@@ -102,6 +103,7 @@ function M.expand(buf)
 			row = row + 1
 			col = col - 1
 		elseif char == "\\" then
+		else
 			row = row + 1
 			col = col + 1
 		end
