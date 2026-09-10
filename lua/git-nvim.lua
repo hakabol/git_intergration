@@ -29,6 +29,56 @@ function M.switch(buf)
 	end
 
 	local hash = line:sub(line:find("=") + 1 or 0)
+
+	local result = vim
+		.system({
+			"git",
+			"show",
+			"-s",
+			"--format=%P",
+			hash,
+		}, { text = true })
+		:wait()
+
+	local parents = vim.split(vim.trim(result.stdout), "%s+", { trimempty = true })
+
+	if #parents > 1 then
+		vim.system({
+			"git",
+			"revert",
+			"-m",
+			"1",
+			hash,
+		}, { text = true }, function(result)
+			vim.schedule(function()
+				print(result.stdout)
+				print(result.stderr)
+			end)
+		end)
+	else
+		print("normal commit")
+		vim.system({
+			"git",
+			"revert",
+			hash,
+		}, { text = true }, function(result)
+			vim.schedule(function()
+				print(result.stdout)
+				print(result.stderr)
+			end)
+		end)
+	end
+
+	vim.system({ "git", "checkout", "--theirs", "." }):wait()
+	vim.system({ "git", "add", "-A" }):wait()
+
+	result = vim
+		.system({
+			"git",
+			"revert",
+			"--continue",
+		}, { text = true })
+		:wait()
 end
 
 function M.expand(buf)
@@ -118,6 +168,9 @@ function M.ui(opts)
 
 			vim.keymap.set("n", "<leader>ge", function()
 				M.expand(buf)
+			end)
+			vim.keymap.set("n", "<leader>gs", function()
+				M.switch(buf)
 			end)
 		end)
 	end)
