@@ -16,6 +16,8 @@ Note: these instructions are with the default config of the plugin
 
 - `<leader>gu` brings up the gui
 - `<leader>gq` closes the gui
-- `<leader>gb` closes the gui
-- `<leader>gp` closes the gui
-- `<leader>gq` closes the gui
+- `<leader>gb` makes a new branch
+- `<leader>ge` gives info about the commit
+- `<leader>gs` switches to selected branch
+- `<leader>gp` pushes the repo
+- `<leader>gc` makes a commit (and adds)
