@@ -1,6 +1,6 @@
 ## installation
 
-Lazy
+For Lazy:
 
 ```lua
 {
@@ -22,3 +22,10 @@ Note: these instructions are with the default config of the plugin
 - `<leader>gs` switches to selected branch
 - `<leader>gp` pushes the repo
 - `<leader>gc` makes a commit (and adds)
+- `<leader>gm` merges the selected branch to chosen branches
+
+### usage
+
+only `<leader>gu`, `<leader>gc`, `<leader>gu` and `<leader>gp` will work without gui
+
+when using `<leader>gs`, `<leader>ge`, `<leader>gs` and `<leader>gs` u must select the commit to perform it on
