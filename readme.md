@@ -1,4 +1,4 @@
-##installation
+## installation
 
 Lazy
 
@@ -9,7 +9,8 @@ Lazy
 }
 ```
 
-##usage
+## usage
+
 Note: these instructions are with the default config of the plugin
 
 ### keybinds
