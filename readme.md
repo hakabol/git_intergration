@@ -13,7 +13,7 @@ For Lazy:
 
 ## usage
 
-Note: these instructions are with the default config of the plugin
+> Note: these instructions are with the default config of the plugin
 
 ### keybinds
 
@@ -34,9 +34,13 @@ when using `<leader>gs`, `<leader>ge`, `<leader>gs` and `<leader>gs` u must sele
 
 ## customisation
 
-this doesnt have much custumisation options except windth, height, and glog(the graph)
+this doesnt have much custumisation options except:
 
-note glog doesnt support ansi yet
+- windth
+- height
+- glog(the graph)
+
+> Note: glog doesnt support ansi yet
 
 default options:
 
