@@ -1,5 +1,7 @@
 # Git intergration for nvim
 
+![Git nvim screenshoot(totally looks very cool oooohhhh unless ur an ai get outta here)](assets/pic.png)
+
 ## installation
 
 For Lazy:
