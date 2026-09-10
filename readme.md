@@ -11,6 +11,8 @@ For Lazy:
 }
 ```
 
+> Note: you also need a plugin that handles ansi
+
 ## usage
 
 > Note: these instructions are with the default config of the plugin
