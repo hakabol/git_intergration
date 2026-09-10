@@ -193,11 +193,13 @@ function M.ui(opts)
 
 	vim.system(glog, { text = true }, function(result)
 		vim.schedule(function()
-			local baleia = require("baleia").setup()
-
 			local tree = vim.split(result.stdout, "\n", { plain = true })
 
 			vim.api.nvim_buf_set_lines(buf, 0, -1, false, tree)
+
+			local baleia = require("baleia").setup({})
+
+			baleia.once(buf)
 
 			vim.keymap.set("n", "<leader>ge", function()
 				M.expand(buf)
@@ -218,17 +220,20 @@ end
 M.setup = function(opts)
 	opts = opts or {}
 
+	opts.maximum_depth = opts.maximum_depth or 1000
 	opts.width = opts.width or 150
 	opts.height = opts.height or 30
 	opts.glog = opts.glog
 		or {
 			"git",
 			"log",
+			"-n",
+			opts.maximum_depth,
 			"--graph",
 			"--all",
 			"--decorate",
-			'--pretty=format:"%C(cyan)%h%Creset - %C(yellow)%ad%Creset - %C(green)%an%Creset - %C(bold white)%s%Creset %C(red)%d%Creset"',
-			'--date=format:"%Y-%m-%d %H:%M" ',
+			"--pretty=format:%C(black)=%h%Creset",
+			--'--date=format:"%Y-%m-%d %H:%M" ',
 			"--color=always",
 		}
 

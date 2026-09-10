@@ -7,6 +7,9 @@ For Lazy:
 ```lua
 {
     'hakabol/git_intergration',
+    dependencies = {
+        "m00qek/baleia.nvim",
+    }
     config = function () require("git-nvim").setup() end,
 }
 ```
