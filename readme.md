@@ -41,11 +41,10 @@ when using `<leader>gs`, `<leader>ge`, `<leader>gs` and `<leader>gs` u must sele
 
 this doesnt have much custumisation options except:
 
-- windth
+- width
 - height
 - glog(the graph)
-
-> Note: glog doesnt support ansi yet
+- maximum_depth (how much commits does the thing process)
 
 default options:
 
@@ -55,6 +54,7 @@ default options:
     config = function () require("git-nvim").setup({
         width = 150,
         height = 30,
+        maximum_depth = 1000 --lower if too laggy
         glog = {
             "git",
             "log",
