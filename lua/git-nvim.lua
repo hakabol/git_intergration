@@ -97,16 +97,18 @@ function M.merge(buf)
 		branch = branchy:gsub("^%* ", "")
 	end
 
-	vim.system({
-		"git",
-		"switch",
-		"master",
-	})
-	vim.system({
-		"git",
-		"merge",
-		branch,
-	})
+	vim.ui.input({ prompt = "to: " }, function(input)
+		vim.system({
+			"git",
+			"switch",
+			input,
+		})
+		vim.system({
+			"git",
+			"merge",
+			branch,
+		})
+	end)
 end
 
 function M.expand(buf)
@@ -186,7 +188,7 @@ function M.ui(opts)
 
 	vim.keymap.set("n", "<leader>gq", function()
 		vim.api.nvim_win_close(win, true)
-	end, { buffer = buf })
+	end, { buffer = buf, desc = "closes the windows" })
 
 	local glog = opts.glog
 
@@ -198,29 +200,35 @@ function M.ui(opts)
 
 			vim.keymap.set("n", "<leader>ge", function()
 				M.expand(buf)
-			end)
+			end, { buffer = buf, desc = "outputs commit msg" })
 
 			vim.keymap.set("n", "<leader>gc", function()
 				vim.ui.input({ prompt = "commit msg: " }, function(input)
 					vim.system({ "git", "add", "." })
 					vim.system({ "git", "commit", "-m", input })
 				end)
-			end)
+			end, { desc = "commits with given msg" })
 			vim.keymap.set("n", "<leader>gp", function()
-				vim.system({ "git", "push" })
+				local out = vim.system({ "git", "push" }, { text = true }):wait()
+				print(out.stdout)
+				print(out.stderr)
 			end)
+		end)
+		vim.schedule(function()
 			vim.keymap.set("n", "<leader>gb", function()
 				vim.ui.input({ prompt = "new branch name: " }, function(input)
-					vim.system({ "git", "switch", "-c", input })
+					if input then
+						vim.system({ "git", "switch", "-c", input })
+					end
 				end)
-			end)
+			end, { buffer = buf, desc = "makes a new branch" })
 			vim.keymap.set("n", "<leader>gm", function()
 				M.merge(buf)
-			end)
+			end, { buffer = buf, desc = "merges 2 branches" })
 
 			vim.keymap.set("n", "<leader>gs", function()
 				M.switch_branch(buf)
-			end)
+			end, { buffer = buf, desc = "switches to selected branch" })
 		end)
 	end)
 end
