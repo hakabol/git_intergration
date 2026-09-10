@@ -158,7 +158,7 @@ function M.ui(opts)
 	local buf = vim.api.nvim_create_buf(false, true)
 
 	-- Put some text in it
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "idk" })
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "loading..." })
 
 	-- Window size
 	vim.o.signcolumn = "no"
