@@ -11,12 +11,10 @@ For Lazy:
     'hakabol/git_intergration',
     dependencies = {
         "m00qek/baleia.nvim",
-    }
+    },
     config = function () require("git-nvim").setup() end,
 }
 ```
-
-> Note: you also need a plugin that handles ansi
 
 ## usage
 
@@ -31,13 +29,13 @@ For Lazy:
 - `<leader>gs` switches to selected branch
 - `<leader>gp` pushes the repo
 - `<leader>gc` makes a commit (and adds)
-- `<leader>gm` merges the selected branch to chosen branches
+- `<leader>gm` merges the selected branch to chosen branches(typed)
 
 ### usage
 
 only `<leader>gu`, `<leader>gc`, `<leader>gb` and `<leader>gp` will work without gui
 
-when using `<leader>gs`, `<leader>ge`, `<leader>gs` and `<leader>gs` u must select the commit to perform it on
+when using `<leader>gm`, `<leader>ge`, `<leader>gs` and `<leader>gs` u must select the commit to perform it on
 
 ## customisation
 
@@ -56,7 +54,7 @@ default options:
     config = function () require("git-nvim").setup({
         width = 150,
         height = 30,
-        maximum_depth = 1000 --lower if too laggy
+        maximum_depth = 1000, --lower if too laggy
         glog = {
             "git",
             "log",
