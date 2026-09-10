@@ -29,7 +29,6 @@ function M.switch_branch(buf)
 	end
 
 	local hash = line:sub(line:find("=") + 1 or 0)
-
 	local result = vim
 		.system({
 			"git",
@@ -249,10 +248,9 @@ M.setup = function(opts)
 		end)
 	end, { desc = "commits with given msg" })
 	vim.keymap.set("n", "<leader>gp", function()
-		local out = vim.system({ "git", "push" }, { text = true }):wait()
-		print(out.stdout)
-		print(out.stderr)
-		print("done")
+		vim.system({ "git", "push" }, { text = true }, function(out)
+			print("done pushing")
+		end)
 	end, { desc = "pushes the repo" })
 end
 
