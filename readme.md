@@ -1,3 +1,5 @@
+# Git intergration for nvim
+
 ## installation
 
 For Lazy:
