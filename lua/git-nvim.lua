@@ -1,6 +1,6 @@
 local M = {}
 
-function M.switch(buf)
+function M.switch_branch(buf)
 	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 	row = row - 1 -- buffer rows are 0-indexed
 
@@ -33,52 +33,80 @@ function M.switch(buf)
 	local result = vim
 		.system({
 			"git",
-			"show",
-			"-s",
-			"--format=%P",
+			"branch",
+			"--points-at",
 			hash,
 		}, { text = true })
 		:wait()
 
-	local parents = vim.split(vim.trim(result.stdout), "%s+", { trimempty = true })
+	local branches = vim.split(vim.trim(result.stdout), "\n", { trimempty = true })
 
-	if #parents > 1 then
-		vim.system({
-			"git",
-			"revert",
-			"-m",
-			"1",
-			hash,
-		}, { text = true }, function(result)
-			vim.schedule(function()
-				print(result.stdout)
-				print(result.stderr)
-			end)
-		end)
-	else
-		print("normal commit")
-		vim.system({
-			"git",
-			"revert",
-			hash,
-		}, { text = true }, function(result)
-			vim.schedule(function()
-				print(result.stdout)
-				print(result.stderr)
-			end)
-		end)
+	local branch = ""
+
+	for _, branchy in ipairs(branches) do
+		branch = branchy:gsub("^%* ", "")
 	end
 
-	vim.system({ "git", "checkout", "--theirs", "." }):wait()
-	vim.system({ "git", "add", "-A" }):wait()
+	vim.system({ "git", "switch", branch })
+end
 
-	result = vim
+function M.merge(buf)
+	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+	row = row - 1 -- buffer rows are 0-indexed
+
+	local line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
+	local char = line:sub(col + 1, col + 1)
+
+	local commit_txt = {
+		["|"] = true,
+		["/"] = true,
+		["\\"] = true,
+		["*"] = false,
+	}
+
+	while commit_txt[char] do
+		if char == "|" then
+			row = row + 1
+		elseif char == "/" then
+			row = row + 1
+			col = col - 1
+		elseif char == "\\" then
+			row = row + 1
+			col = col + 1
+		end
+		line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
+		char = line:sub(col + 1, col + 1)
+	end
+
+	local hash = line:sub(line:find("=") + 1 or 0)
+
+	local result = vim
 		.system({
 			"git",
-			"revert",
-			"--continue",
+			"branch",
+			"--points-at",
+			hash,
 		}, { text = true })
 		:wait()
+
+	local branches = vim.split(vim.trim(result.stdout), "\n", { trimempty = true })
+
+	local branch = ""
+
+	for _, branchy in ipairs(branches) do
+		branch = branchy:gsub("^%* ", "")
+	end
+
+	vim.system({
+		"git",
+		"switch",
+		"master",
+	})
+	vim.system({
+		"git",
+		"merge",
+		branch,
+	})
 end
 
 function M.expand(buf)
@@ -171,8 +199,27 @@ function M.ui(opts)
 			vim.keymap.set("n", "<leader>ge", function()
 				M.expand(buf)
 			end)
+
+			vim.keymap.set("n", "<leader>gc", function()
+				vim.ui.input({ prompt = "commit msg: " }, function(input)
+					vim.system({ "git", "add", "." })
+					vim.system({ "git", "commit", "-m", input })
+				end)
+			end)
+			vim.keymap.set("n", "<leader>gp", function()
+				vim.system({ "git", "push" })
+			end)
+			vim.keymap.set("n", "<leader>gb", function()
+				vim.ui.input({ prompt = "new branch name: " }, function(input)
+					vim.system({ "git", "switch", "-c", input })
+				end)
+			end)
+			vim.keymap.set("n", "<leader>gm", function()
+				M.merge(buf)
+			end)
+
 			vim.keymap.set("n", "<leader>gs", function()
-				M.switch(buf)
+				M.switch_branch(buf)
 			end)
 		end)
 	end)
