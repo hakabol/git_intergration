@@ -25,14 +25,14 @@ For Lazy:
 ### keybinds
 
 - `<leader>gu` brings up the gui
-- `<leader>q` closes the gui
+- `q` closes the gui
 - `<leader>gb` makes a new branch
-- `<leader>e` gives info about the commit
-- `<leader>s` switches to selected branch
+- `e` gives info about the commit
+- `s` switches to selected branch
 - `<leader>gp` pushes the repo
 - `<leader>gc` makes a commit (and adds)
-- `<leader>m` merges the selected branch to chosen branches(typed)
-- `<leader>d` shows the difference between the selected file in its current state and selected commmit
+- `m` merges the selected branch to chosen branches(typed)
+- `d` shows the difference between the selected file in its current state and selected commmit
 
 ### usage
 
