@@ -1,6 +1,6 @@
 local M = {}
 
-function M.diff(buf, win)
+function M.diff(buf, win, opts)
 	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 	row = row - 1 -- buffer rows are 0-indexed
 
@@ -28,12 +28,12 @@ function M.diff(buf, win)
 		char = line:sub(col + 1, col + 1)
 	end
 
-	local hash = line:sub(line:find("=") + 1 or 0)
+	local hash = " " + line:sub(line:find("=") + 1 or 0)
 
 	vim.api.nvim_win_close(win, true)
 	vim.defer_fn(function()
 		vim.schedule(function()
-			vim.cmd("Diff " .. hash)
+			vim.cmd(opts.diff .. hash)
 		end)
 	end, 100)
 end
@@ -246,7 +246,7 @@ function M.ui(opts)
 
 		vim.schedule(function()
 			vim.keymap.set("n", "d", function()
-				M.diff(buf, win)
+				M.diff(buf, win, opts)
 			end, { buffer = buf, desc = "checks the difference" })
 
 			vim.schedule(function()
@@ -265,6 +265,7 @@ end
 M.setup = function(opts)
 	opts = opts or {}
 
+	opts.diff = opts.diff or "Diff"
 	opts.maximum_depth = opts.maximum_depth or 1000
 	opts.width = opts.width or 150
 	opts.height = opts.height or 30

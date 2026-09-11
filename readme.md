@@ -48,6 +48,7 @@ this doesnt have much custumisation options except:
 - height
 - glog(the graph)
 - maximum_depth (how much commits does the thing process)
+- diff (the difference command)
 
 default options:
 
@@ -58,6 +59,7 @@ default options:
         width = 150,
         height = 30,
         maximum_depth = 1000, --lower if too laggy
+        diff = "Diff" -- the command will become Diff <Hash>
         glog = {
             "git",
             "log",
