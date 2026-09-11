@@ -11,6 +11,8 @@ For Lazy:
     'hakabol/git_intergration',
     dependencies = {
         "m00qek/baleia.nvim",
+        'lewis6991/gitsigns.nvim',
+        'barrettruth/diffs.nvim',
     },
     config = function () require("git-nvim").setup() end,
 }
@@ -30,12 +32,13 @@ For Lazy:
 - `<leader>gp` pushes the repo
 - `<leader>gc` makes a commit (and adds)
 - `<leader>m` merges the selected branch to chosen branches(typed)
+- `<leader>d` shows the difference between the selected file in its current state and selected commmit
 
 ### usage
 
 only `<leader>gu`, `<leader>gc`, `<leader>gb` and `<leader>gp` will work without gui
 
-when using `m`, `e`, `s` and `q` u must select the commit to perform it on
+when using `m`, `e`, `s`, `d` and `q` you must select the commit to perform it on
 
 ## customisation
 
