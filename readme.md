@@ -23,19 +23,19 @@ For Lazy:
 ### keybinds
 
 - `<leader>gu` brings up the gui
-- `<leader>gq` closes the gui
+- `<leader>q` closes the gui
 - `<leader>gb` makes a new branch
-- `<leader>ge` gives info about the commit
-- `<leader>gs` switches to selected branch
+- `<leader>e` gives info about the commit
+- `<leader>s` switches to selected branch
 - `<leader>gp` pushes the repo
 - `<leader>gc` makes a commit (and adds)
-- `<leader>gm` merges the selected branch to chosen branches(typed)
+- `<leader>m` merges the selected branch to chosen branches(typed)
 
 ### usage
 
 only `<leader>gu`, `<leader>gc`, `<leader>gb` and `<leader>gp` will work without gui
 
-when using `<leader>gm`, `<leader>ge`, `<leader>gs` and `<leader>gs` u must select the commit to perform it on
+when using `m`, `e`, `s` and `q` u must select the commit to perform it on
 
 ## customisation
 

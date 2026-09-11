@@ -1,5 +1,43 @@
 local M = {}
 
+function M.diff(buf, win)
+	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+	row = row - 1 -- buffer rows are 0-indexed
+
+	local line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
+	local char = line:sub(col + 1, col + 1)
+
+	local commit_txt = {
+		["|"] = true,
+		["/"] = true,
+		["\\"] = true,
+		["*"] = false,
+	}
+
+	while commit_txt[char] do
+		if char == "|" then
+			row = row + 1
+		elseif char == "/" then
+			row = row + 1
+			col = col - 1
+		elseif char == "\\" then
+			row = row + 1
+			col = col + 1
+		end
+		line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
+		char = line:sub(col + 1, col + 1)
+	end
+
+	local hash = line:sub(line:find("=") + 1 or 0)
+
+	vim.api.nvim_win_close(win, true)
+	vim.defer_fn(function()
+		vim.schedule(function()
+			vim.cmd("Diff" .. hash)
+		end)
+	end, 100)
+end
+
 function M.switch_branch(buf)
 	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 	row = row - 1 -- buffer rows are 0-indexed
@@ -185,7 +223,7 @@ function M.ui(opts)
 	vim.wo[win].signcolumn = "no"
 	vim.wo[win].fillchars = "eob: "
 
-	vim.keymap.set("n", "<leader>gq", function()
+	vim.keymap.set("n", "q", function()
 		vim.api.nvim_win_close(win, true)
 	end, { buffer = buf, desc = "closes the windows" })
 
@@ -201,18 +239,25 @@ function M.ui(opts)
 
 			baleia.once(buf)
 
-			vim.keymap.set("n", "<leader>ge", function()
+			vim.keymap.set("n", "e", function()
 				M.expand(buf)
 			end, { buffer = buf, desc = "outputs commit msg" })
 		end)
-		vim.schedule(function()
-			vim.keymap.set("n", "<leader>gm", function()
-				M.merge(buf)
-			end, { buffer = buf, desc = "merges 2 branches" })
 
-			vim.keymap.set("n", "<leader>gs", function()
-				M.switch_branch(buf)
-			end, { buffer = buf, desc = "switches to selected branch" })
+		vim.schedule(function()
+			vim.keymap.set("n", "d", function()
+				M.diff(buf, win)
+			end, { buffer = buf, desc = "checks the difference" })
+
+			vim.schedule(function()
+				vim.keymap.set("n", "m", function()
+					M.merge(buf)
+				end, { buffer = buf, desc = "merges 2 branches" })
+
+				vim.keymap.set("n", "s", function()
+					M.switch_branch(buf)
+				end, { buffer = buf, desc = "switches to selected branch" })
+			end)
 		end)
 	end)
 end
@@ -228,11 +273,11 @@ M.setup = function(opts)
 			"git",
 			"log",
 			"-n",
-			opts.maximum_depth,
+			tostring(opts.maximum_depth),
 			"--graph",
 			"--all",
 			"--decorate",
-			"--pretty=format:%C(black)=%h%Creset",
+			"--pretty=format:\x1b[30m=%h%Creset\x1b[0m",
 			--'--date=format:"%Y-%m-%d %H:%M" ',
 			"--color=always",
 		}
