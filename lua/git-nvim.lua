@@ -33,7 +33,7 @@ function M.diff(buf, win)
 	vim.api.nvim_win_close(win, true)
 	vim.defer_fn(function()
 		vim.schedule(function()
-			vim.cmd("Diff" .. hash)
+			vim.cmd("Diff " .. hash)
 		end)
 	end, 100)
 end
